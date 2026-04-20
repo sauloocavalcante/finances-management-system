@@ -8,13 +8,12 @@ class Category(models.Model):
     ]
     
     name = models.CharField(max_length=100)
-    type = models.CharField(max_length=2, choices=TYPE_CHOICES)
-    color = models.CharField(max_length=7, default='#000000')
-    icon = models.CharField(max_length=50, blank=True)
+    description = models.TextField(null=True, blank=True)
     
     class Meta:
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
+        ordering = ['name']
     
     def __str__(self):
         return self.name
@@ -27,27 +26,26 @@ class Transaction(models.Model):
     ]
     
     value = models.DecimalField(max_digits=10, decimal_places=2)
-    date = models.DateField()
-    description = models.TextField()
+    date = models.DateField(auto_now=True)
+    description = models.TextField(null = True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    type = models.CharField(max_length=2, choices=TYPE_CHOICES)
     
     class Meta:
         verbose_name = 'Trasaction'
         verbose_name_plural = 'Transactions'
     
     def __str__(self):
-        return f"{self.description[:50]} - R${self.value}"
+        return f"{self.category.name} - R${self.value}"
 
 
 class Account(models.Model):
     name = models.CharField(max_length=100)
     initial_balance = models.DecimalField(max_digits=10, decimal_places=2)
-    color = models.CharField(max_length=7, default='#000000')
     
     class Meta:
         verbose_name = 'Account'
         verbose_name_plural = 'Accounts'
+        ordering = ['name']
     
     def __str__(self):
         return self.name
